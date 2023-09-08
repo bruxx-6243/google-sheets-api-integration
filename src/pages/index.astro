@@ -1,0 +1,88 @@
+---
+import CardDay from "../components/CardDay.astro";
+
+const res = await fetch(
+  `https://script.google.com/macros/s/${import.meta.env.GOOGLE_API_KEY}/exec`
+);
+const { data, colors } = await res.json();
+
+const color = (i: number) => Object.values(colors[i]);
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Astro</title>
+  </head>
+  <body>
+    <div>
+      <h1>Google Sheets Integration API</h1>
+      <ul>
+        {
+          data.map(
+            (
+              s: {
+                day: string;
+                hours: string;
+              },
+              i: number
+            ) => (
+              <li
+                style={{
+                  backgroundColor: color(i),
+                  border: `2px solid ${color(i)}`,
+                }}>
+                <CardDay {...s} />
+              </li>
+            )
+          )
+        }
+      </ul>
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  *,
+  ::before,
+  ::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: sans-serif;
+  }
+
+  html,
+  body {
+    height: 100%;
+
+    color: aliceblue;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-block: 1rem;
+
+    color: teal;
+  }
+
+  ul {
+    height: 100%;
+    list-style: none;
+
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+
+    row-gap: 0.5rem;
+  }
+</style>
